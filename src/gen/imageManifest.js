@@ -1,6 +1,14 @@
 const IMAGES = `images/connected_tile.png
 images/green_tile.png
 images/infected_tile.png
+images/output/connected_tile.png
+images/output/green_tile.png
+images/output/infected_tile.png
+images/output/raised_template.png
+images/output/seed.png
+images/output/sprout.png
+images/output/tile_template.png
+images/plant.png
 images/raised_template.png
 images/roots/root_e.png
 images/roots/root_e_incoming.png
@@ -23,4 +31,5 @@ images/roots/root_w.png
 images/roots/root_w_incoming.png
 images/roots/root_w_sml.png
 images/seed.png
+images/sprout.png
 images/tile_template.png`;

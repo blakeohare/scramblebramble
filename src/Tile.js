@@ -51,6 +51,11 @@ class Tile {
 
   setState(newState) {
     this.stateCounter = 0;
+    let noSpread = this.state === 'CLEAN' || this.state === 'FALLING' || this.state === 'DROPPED';
+    let spread = newState === 'SPROUT' || newState === 'CONNECTED';
+    // if (noSpread && spread) {
+      this.spreadCounter = ROOT_SPREAD_COUNTER;
+    //}
     this.state = newState;
   }
 
@@ -61,6 +66,12 @@ class Tile {
     if (this.fullRootStatus[spreadDir]) {
         let targetTile = this.neighbors[spreadDir];
         targetTile.fullRootStatus[this.dirInvert[spreadDir]] = true; // register the opposite direction as fulfilled
+        if (targetTile.state !== 'CONNECTED') {
+          targetTile.setState('CONNECTED');
+        }
+        if (this.state !== 'CONNECTED') {
+          this.setState('CONNECTED');
+        }
     } else {
       this.fullRootStatus[spreadDir] = true;
       // incoming root status is updated speparately in a canonicalize-pass
@@ -78,6 +89,7 @@ class Tile {
     this.offsetX = 0;
 
 
+    let doSpread = false;
     switch (this.state) {
       case 'DROPPED':
         if (this.stateCounter > FPS * 2) {
@@ -86,15 +98,25 @@ class Tile {
         }
         break;
       case 'SPROUT':
-        if (this.spreadCounter-- <= 0) {
-          this.spreadFurther();
-        }
+        doSpread = true;
         break;
+      case 'CONNECTED':
+        doSpread = true;
+        break;
+    }
+
+    if (doSpread) {
+      if (this.spreadCounter-- <= 0) {
+        this.spreadFurther();
+      }
     }
   }
 
   fixIncomingConnections() {
+    let hasAnyOutgoing = false;
     for (let dir of this.dirs) {
+      if (!hasAnyOutgoing && this.fullRootStatus[dir]) hasAnyOutgoing = true;
+
       let neighbor = this.neighbors[dir];
       let inv = this.dirInvert[dir];
       if (neighbor) {
@@ -108,6 +130,12 @@ class Tile {
         } else if (nHasFull) {
           this.incomingRootStatus[dir] = true;
         }
+      }
+    }
+
+    if (hasAnyOutgoing) {
+      for (let dir of this.dirs) {
+        this.rootSproutStatus[dir] = true;
       }
     }
   }
@@ -134,6 +162,8 @@ class Tile {
         CONNECTED: gfx.getImage('images/connected_tile.png'),
         SEED: gfx.getImage('images/seed.png'),
         ROOT_ALL: gfx.getImage('images/root_full.png'),
+        SPROUT: gfx.getImage('images/sprout.png'),
+        PLANT: gfx.getImage('images/plant.png'),
         ROOT_BIG: {},
         ROOT_SMALL: {},
         ROOT_INCOMING: {},
@@ -159,13 +189,15 @@ class Tile {
         break;
       case 'DROPPED':
         bg = this.images.CLEAN;
-        plant = this.images.SEED;
+        plant = this.images.SPROUT;
         break;
       case 'SPROUT':
         bg = this.images.INFECTED;
+        plant = this.images.PLANT;
         break;
       case 'CONNECTED':
         bg = this.images.CONNECTED;
+        plant = this.images.PLANT;
         break;
       default: throw new Error();
     }
