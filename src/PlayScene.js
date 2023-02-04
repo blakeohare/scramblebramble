@@ -66,11 +66,11 @@ class PlayScene {
       this.seedDropCountdown = Math.floor(FPS / 6 + this.seedDropDelay);
       let availableTiles = this.allTiles.filter(t => t.state === 'CLEAN');
       if (availableTiles.length === 0) {
-        console.log("YOU LOSE");
-      } else {   
+        setNextScene(new ScoreScreen(this));
+        return;
+      } else {
         let tile = availableTiles[Math.floor(Math.random() * availableTiles.length)];
         this.sprites.push(new FallingSeed(tile));
-        
       }
     }
 
