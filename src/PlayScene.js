@@ -8,7 +8,10 @@ class PlayScene {
     this.score = 0;
 
     this.seedDropCountdown = 1;
-    this.seedDropDelay = FPS * 3;
+    this.seedDropDelay = STARTING_SEED_DROP_DELAY;
+    this.rootSpreadCounter = INITIAL_ROOT_SPREAD_COUNTER;
+
+    this.infectionCount = 0;
 
     this.sprites = [];
 
@@ -61,24 +64,34 @@ class PlayScene {
     return null;
   }
 
+  getRootSpreadCounterDuration() {
+    this.rootSpreadCounter *= ROOT_SPREAD_COUNTER_DECAY;
+    return Math.max(ROOT_SPREAD_COUNTER_MINIMUM, this.rootSpreadCounter);
+  }
+
+  incrementScore() {
+    this.score++;
+  }
+
   update(events) {
 
     if (this.seedDropCountdown-- <= 0) {
-      this.score++;
-      this.seedDropDelay *= 0.98;
-      this.seedDropCountdown = Math.floor(FPS / 8 + this.seedDropDelay);
-      this.seedDropCountdown *= .18;
+      this.seedDropDelay *= SEED_DROP_DECAY_PER_DROP;
+      this.seedDropCountdown = Math.floor(this.seedDropDelay);
+      this.seedDropCountdown *= SEED_DROP_OVERALL_SPEED_RATIO;
+      this.seedDropCountdown = Math.max(SEED_DROP_MINIMUM_VALUE, this.seedDropCountdown);
+
       let availableTiles = this.allTiles.filter(t => t.state === 'CLEAN');
       if (availableTiles.length) {
         let tile = availableTiles[Math.floor(Math.random() * availableTiles.length)];
-        this.sprites.push(new FallingSeed(tile));
+        this.sprites.push(new FallingSeed(tile, this));
       }
     }
 
     for (let ev of events) {
       if (ev.type === 'TAP') {
         let tile = this.hitTest(ev.x, ev.y);
-        if (tile) tile.attackPlant();
+        if (tile) tile.attackPlant(this);
       }
     }
 
@@ -92,7 +105,7 @@ class PlayScene {
     this.sprites = newSprites;
 
     for (let tile of this.allTiles) {
-      tile.update();
+      tile.update(this);
     }
     
     // 2nd pass
@@ -106,9 +119,11 @@ class PlayScene {
     }
     
     if (notConnected === 0) {
-      setNextScene(new ScoreScreen(this));
+      setNextScene(new ScoreScreen(this, this.score));
     }
 
+    this.infectionCount = this.allTiles.length - notConnected;
+    this.isCascade = this.infectionCount / this.allTiles.length >= RATIO_FOR_CASCADE;
   }
 
   render(gfx, rc) {
@@ -129,5 +144,7 @@ class PlayScene {
     for (let sprite of this.sprites) {
       sprite.render(gfx, rc);
     }
+
+    gfx.drawText("Score: " + this.score, 'XL', 10, 100, 255, 255, 255);
   }
 }

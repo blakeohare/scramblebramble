@@ -1,14 +1,8 @@
-const DEV_MODE = true;
-
 let setNextScene = null;
 
-const FPS = 60;
-const WIDTH = 1024;
-const HEIGHT = Math.floor(WIDTH * 9 / 16);
-
 window.addEventListener('load', async () => {
-
-
+  window.addEventListener('contextmenu', e => e.preventDefault());
+ 
   let screen = document.getElementById('screen');
   screen.style.position = 'absolute';
   screen.width = WIDTH;

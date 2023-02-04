@@ -1,0 +1,20 @@
+const DEV_MODE = false;
+
+const FPS = 60;
+const WIDTH = 1024;
+const HEIGHT = Math.floor(WIDTH * 9 / 16);
+
+const STARTING_SEED_DROP_DELAY = FPS * 0.8;
+const SEED_DROP_DECAY_PER_DROP = 0.98;
+const SEED_DROP_OVERALL_SPEED_RATIO = 1.0;
+const SEED_DROP_MINIMUM_VALUE = Math.floor(FPS / 4);
+
+
+const JOLT_ANIM_DURATION = FPS / 6;
+const INITIAL_ROOT_SPREAD_COUNTER = Math.floor(FPS * 1.2);
+const ROOT_SPREAD_COUNTER_DECAY = 0.97;
+const ROOT_SPREAD_COUNTER_MINIMUM = FPS / 12;
+const ROOT_SPREAD_COUNTER_FIRST = FPS;
+
+const RATIO_FOR_CASCADE = 0.1;
+

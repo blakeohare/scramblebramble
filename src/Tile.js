@@ -1,8 +1,6 @@
 const TILE_WIDTH = 74;
 const TILE_HEIGHT = 79;
 
-const JOLT_ANIM_DURATION = FPS / 6;
-const ROOT_SPREAD_COUNTER = Math.floor(FPS * 1.2);
 
 class Tile {
   constructor(col, row) {
@@ -24,7 +22,7 @@ class Tile {
     this.rootSproutStatus = {};
     this.fullRootStatus = {};
     this.incomingRootStatus = {};
-    this.spreadCounter = Math.floor(FPS * 0.6);
+    this.spreadCounter = Math.floor(FPS);
 
     this.neighbors = {
       NW: null,
@@ -49,11 +47,14 @@ class Tile {
     this.stateCounter = 0;
   }
 
-  setState(newState) {
+  setState(newState, scene) {
     this.stateCounter = 0;
-    let noSpread = this.state === 'CLEAN' || this.state === 'FALLING' || this.state === 'DROPPED';
-    let spread = newState === 'SPROUT' || newState === 'CONNECTED';
-    this.spreadCounter = ROOT_SPREAD_COUNTER;
+    this.spreadCounter = ROOT_SPREAD_COUNTER_FIRST; 
+    if (scene.isCascade) this.spreadCounter = 8;
+
+    if (newState === 'CLEAN' && this.state !== 'CLEAN') {
+      scene.incrementScore();
+    }
     this.state = newState;
     if (this.state === 'CLEAN') {
       this.seed = null;
@@ -62,18 +63,18 @@ class Tile {
     }
   }
 
-  spreadFurther() {
-    this.spreadCounter = ROOT_SPREAD_COUNTER;
+  spreadFurther(scene) {
+    this.spreadCounter = scene.getRootSpreadCounterDuration();
     let validDirs = this.dirs.filter(dir => !!this.neighbors[dir]);
     let spreadDir = validDirs[Math.floor(Math.random() * validDirs.length)];
     if (this.fullRootStatus[spreadDir]) {
         let targetTile = this.neighbors[spreadDir];
         targetTile.fullRootStatus[this.dirInvert[spreadDir]] = true; // register the opposite direction as fulfilled
         if (targetTile.state !== 'CONNECTED') {
-          targetTile.setState('CONNECTED');
+          targetTile.setState('CONNECTED', scene);
         }
         if (this.state !== 'CONNECTED') {
-          this.setState('CONNECTED');
+          this.setState('CONNECTED', scene);
         }
     } else {
       this.fullRootStatus[spreadDir] = true;
@@ -81,7 +82,7 @@ class Tile {
     }
   }
 
-  update() {
+  update(scene) {
     this.stateCounter++;
     this.joltCounter--;
     if (this.joltCounter <= 0) {
@@ -91,12 +92,11 @@ class Tile {
     }
     this.offsetX = 0;
 
-
     let doSpread = false;
     switch (this.state) {
       case 'DROPPED':
         if (this.stateCounter > FPS * .3) {
-          this.setState('SPROUT');
+          this.setState('SPROUT', scene);
           this.dirs.forEach(dir => { this.rootSproutStatus[dir] = true; });
         }
         break;
@@ -110,7 +110,7 @@ class Tile {
 
     if (doSpread) {
       if (this.spreadCounter-- <= 0) {
-        this.spreadFurther();
+        this.spreadFurther(scene);
       }
     }
   }
@@ -149,17 +149,17 @@ class Tile {
     this.joltCounter = JOLT_ANIM_DURATION;
   }
 
-  enableFallingShadow(seed) {
+  enableFallingShadow(seed, scene) {
     this.seed = seed;
-    this.setState('FALLING');
+    this.setState('FALLING', scene);
   }
 
-  plantSeed(seed) {
+  plantSeed(seed, scene) {
     this.seed = null;
-    this.setState('DROPPED');
+    this.setState('DROPPED', scene);
   }
 
-  attackPlant() {
+  attackPlant(scene) {
     this.jolt();
     let choices = [];
     for (let dir of this.dirs) {
@@ -173,10 +173,10 @@ class Tile {
 
     } else {
       if (this.state === 'CONNECTED') {
-        this.setState('SPROUT');
-      } else if (this.state === 'SPROUT') {
-        this.setState('CLEAN');
-      }
+        this.setState('SPROUT', scene);
+      } else if (this.state === 'SPROUT' || this.state === 'DROPPED') {
+        this.setState('CLEAN', scene);
+      } 
     }
 
     this.fixConnections();
@@ -222,7 +222,7 @@ class Tile {
         shadowSize = 4;
         break;
       case 'DROPPED':
-        bg = this.images.CLEAN;
+        bg = this.images.INFECTED;
         plant = this.images.SPROUT;
         break;
       case 'SPROUT':

@@ -11,7 +11,7 @@ class ScoreScreen {
 
     let goToNext = false;
     for (let ev of events) {
-      if (ev.type === 'TAP') {
+      if (ev.type === 'TAP' && this.counter > FPS) {
         goToNext = true;
       }
     }

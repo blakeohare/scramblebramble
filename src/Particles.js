@@ -1,11 +1,11 @@
 class FallingSeed {
-  constructor(targetTile) {
+  constructor(targetTile, scene) {
     this.renderX = null;
     this.renderY = null;
     this.tile = targetTile;
     this.fallCounter = FPS;
     this.dead = false;
-    this.tile.enableFallingShadow(this);
+    this.tile.enableFallingShadow(this, scene);
     this.image = null;
   }
 
@@ -13,7 +13,7 @@ class FallingSeed {
     this.fallCounter--;
     if (this.fallCounter <= 0) {
       this.dead = true;
-      this.tile.plantSeed(this);
+      this.tile.plantSeed(this, scene);
     }
   }
 
