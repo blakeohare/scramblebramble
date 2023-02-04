@@ -45,6 +45,7 @@ class Tile {
     this.seed = null;
     this.images = null;
     this.stateCounter = 0;
+    this.pulseCounter = Math.floor(Math.random() * 10000);
   }
 
   setState(newState, scene) {
@@ -91,6 +92,9 @@ class Tile {
       this.offsetY = -Math.floor(15 * Math.sin(Math.PI * this.joltCounter / JOLT_ANIM_DURATION));
     }
     this.offsetX = 0;
+
+    this.offsetY += Math.floor(Math.cos(this.pulseCounter * Math.PI / FPS * 1.5) * 2 + 0.5);
+    this.pulseCounter++;
 
     let doSpread = false;
     switch (this.state) {
