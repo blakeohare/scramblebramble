@@ -9,6 +9,8 @@ window.addEventListener('load', async () => {
   screen.height = HEIGHT;
 
   let screenCtx = screen.getContext('2d');
+  screenCtx.imageSmoothingEnabled = false;
+  screen.style.imageRendering = 'pixelated';
 
   let updateSize = () => {
     let realWidth = window.innerWidth;
