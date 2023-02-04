@@ -23,18 +23,18 @@ class PlayScene {
 
     Object.values(allTilesLookup).forEach(tile => {
       let { col, row } = tile;
-      tile.neighbors.W = this.allTiles[(col - 1) + ',' + row] || null;
-      tile.neighbors.E = this.allTiles[(col + 1) + ',' + row] || null;
+      tile.neighbors.W = allTilesLookup[(col - 1) + ',' + row] || null;
+      tile.neighbors.E = allTilesLookup[(col + 1) + ',' + row] || null;
 
       let westX = row % 2 === 0 ? (col - 1) : col;
       let northY = row - 1;
       let eastX = westX + 1;
       let southY = row + 1;
 
-      tile.neighbors.NW = this.allTiles[westX + ',' + northY] || null;
-      tile.neighbors.NE = this.allTiles[eastX + ',' + northY] || null;
-      tile.neighbors.SW = this.allTiles[westX + ',' + southY] || null;
-      tile.neighbors.SE = this.allTiles[eastX + ',' + southY] || null;
+      tile.neighbors.NW = allTilesLookup[westX + ',' + northY] || null;
+      tile.neighbors.NE = allTilesLookup[eastX + ',' + northY] || null;
+      tile.neighbors.SW = allTilesLookup[westX + ',' + southY] || null;
+      tile.neighbors.SE = allTilesLookup[eastX + ',' + southY] || null;
     });
   }
 
@@ -65,9 +65,13 @@ class PlayScene {
       this.seedDropDelay *= 0.99;
       this.seedDropCountdown = Math.floor(FPS / 6 + this.seedDropDelay);
       let availableTiles = this.allTiles.filter(t => t.state === 'CLEAN');
-      let tile = availableTiles[Math.floor(Math.random() * availableTiles.length)];
-      this.sprites.push(new FallingSeed(tile));
-      console.log(this.sprites);
+      if (availableTiles.length === 0) {
+        console.log("YOU LOSE");
+      } else {   
+        let tile = availableTiles[Math.floor(Math.random() * availableTiles.length)];
+        this.sprites.push(new FallingSeed(tile));
+        
+      }
     }
 
     for (let ev of events) {
@@ -89,6 +93,11 @@ class PlayScene {
     for (let tile of this.allTiles) {
       tile.update();
     }
+
+    // canonicalize tile connections
+    for (let tile of this.allTiles) {
+      tile.fixIncomingConnections();
+    }
   }
 
   render(gfx, rc) {
@@ -107,9 +116,7 @@ class PlayScene {
     }
 
     for (let sprite of this.sprites) {
-      if (sprite.renderX !== null) {
-        sprite.render(gfx, rc);
-      }
+      sprite.render(gfx, rc);
     }
   }
 }

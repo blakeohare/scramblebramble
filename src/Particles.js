@@ -6,6 +6,7 @@ class FallingSeed {
     this.fallCounter = FPS;
     this.dead = false;
     this.tile.enableFallingShadow(this);
+    this.image = null;
   }
 
   update(scene) {
@@ -17,9 +18,12 @@ class FallingSeed {
   }
 
   render(gfx, rc) {
-    let x = this.tile.actualX;
-    let y = this.tile.actualY;
-    y += Math.floor(HEIGHT * this.fallCounter / FPS)
+    this.image = this.image || gfx.getImage('images/seed.png');
+    this.renderX = this.tile.actualX - this.image.width / 2;
+    this.renderY = this.tile.actualY - this.image.height;
+    this.renderY -= Math.floor(HEIGHT * this.fallCounter / FPS)
+
+    gfx.drawImage(this.image, this.renderX, this.renderY);
   }
 }
 

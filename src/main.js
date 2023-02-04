@@ -1,4 +1,4 @@
-const DEV_MODE = false;
+const DEV_MODE = true;
 
 let setNextScene = null;
 
