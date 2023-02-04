@@ -5,7 +5,9 @@ class PlayScene {
     this.height = this.grid[0].length;
     this.tileLocCache = {};
 
-    this.seedDropCountdown = 0;
+    this.score = 0;
+
+    this.seedDropCountdown = 1;
     this.seedDropDelay = FPS * 3;
 
     this.sprites = [];
@@ -62,13 +64,12 @@ class PlayScene {
   update(events) {
 
     if (this.seedDropCountdown-- <= 0) {
-      this.seedDropDelay *= 0.99;
-      this.seedDropCountdown = Math.floor(FPS / 6 + this.seedDropDelay);
+      this.score++;
+      this.seedDropDelay *= 0.98;
+      this.seedDropCountdown = Math.floor(FPS / 8 + this.seedDropDelay);
+      this.seedDropCountdown *= .18;
       let availableTiles = this.allTiles.filter(t => t.state === 'CLEAN');
-      if (availableTiles.length === 0) {
-        setNextScene(new ScoreScreen(this));
-        return;
-      } else {
+      if (availableTiles.length) {
         let tile = availableTiles[Math.floor(Math.random() * availableTiles.length)];
         this.sprites.push(new FallingSeed(tile));
       }
@@ -77,7 +78,7 @@ class PlayScene {
     for (let ev of events) {
       if (ev.type === 'TAP') {
         let tile = this.hitTest(ev.x, ev.y);
-        if (tile) tile.jolt();
+        if (tile) tile.attackPlant();
       }
     }
 
@@ -93,11 +94,21 @@ class PlayScene {
     for (let tile of this.allTiles) {
       tile.update();
     }
-
-    // canonicalize tile connections
+    
+    // 2nd pass
+    let notConnected = 0;
     for (let tile of this.allTiles) {
-      tile.fixIncomingConnections();
+      tile.fixConnections();
+      
+      if (tile.state !== 'CONNECTED') {
+        notConnected++;
+      }
     }
+    
+    if (notConnected === 0) {
+      setNextScene(new ScoreScreen(this));
+    }
+
   }
 
   render(gfx, rc) {

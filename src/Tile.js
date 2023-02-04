@@ -24,7 +24,7 @@ class Tile {
     this.rootSproutStatus = {};
     this.fullRootStatus = {};
     this.incomingRootStatus = {};
-    this.spreadCounter = Math.floor(FPS * 1.2);
+    this.spreadCounter = Math.floor(FPS * 0.6);
 
     this.neighbors = {
       NW: null,
@@ -53,10 +53,13 @@ class Tile {
     this.stateCounter = 0;
     let noSpread = this.state === 'CLEAN' || this.state === 'FALLING' || this.state === 'DROPPED';
     let spread = newState === 'SPROUT' || newState === 'CONNECTED';
-    // if (noSpread && spread) {
-      this.spreadCounter = ROOT_SPREAD_COUNTER;
-    //}
+    this.spreadCounter = ROOT_SPREAD_COUNTER;
     this.state = newState;
+    if (this.state === 'CLEAN') {
+      this.seed = null;
+      this.rootSproutStatus = {};
+      this.fullRootStatus = {};
+    }
   }
 
   spreadFurther() {
@@ -92,7 +95,7 @@ class Tile {
     let doSpread = false;
     switch (this.state) {
       case 'DROPPED':
-        if (this.stateCounter > FPS * 2) {
+        if (this.stateCounter > FPS * .3) {
           this.setState('SPROUT');
           this.dirs.forEach(dir => { this.rootSproutStatus[dir] = true; });
         }
@@ -112,7 +115,7 @@ class Tile {
     }
   }
 
-  fixIncomingConnections() {
+  fixConnections() {
     let hasAnyOutgoing = false;
     for (let dir of this.dirs) {
       if (!hasAnyOutgoing && this.fullRootStatus[dir]) hasAnyOutgoing = true;
@@ -129,6 +132,8 @@ class Tile {
           neighbor.incomingRootStatus[inv] = true;
         } else if (nHasFull) {
           this.incomingRootStatus[dir] = true;
+        } else {
+          this.incomingRootStatus[dir] = false;
         }
       }
     }
@@ -152,6 +157,35 @@ class Tile {
   plantSeed(seed) {
     this.seed = null;
     this.setState('DROPPED');
+  }
+
+  attackPlant() {
+    this.jolt();
+    let choices = [];
+    for (let dir of this.dirs) {
+      if (this.fullRootStatus[dir]) {
+        choices.push(dir);
+      }
+    }
+    let attackDir = Util.randomChoice(choices);
+    if (attackDir) {
+      this.fullRootStatus[attackDir] = false;
+
+    } else {
+      if (this.state === 'CONNECTED') {
+        this.setState('SPROUT');
+      } else if (this.state === 'SPROUT') {
+        this.setState('CLEAN');
+      }
+    }
+
+    this.fixConnections();
+    for (let dir of this.dirs) {
+      let neighbor = this.neighbors[dir];
+      if (neighbor) {
+        neighbor.fixConnections();
+      }
+    }
   }
 
   render(gfx, rc, x, y) {

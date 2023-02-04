@@ -1,13 +1,6 @@
 const IMAGES = `images/connected_tile.png
 images/green_tile.png
 images/infected_tile.png
-images/output/connected_tile.png
-images/output/green_tile.png
-images/output/infected_tile.png
-images/output/raised_template.png
-images/output/seed.png
-images/output/sprout.png
-images/output/tile_template.png
 images/plant.png
 images/raised_template.png
 images/roots/root_e.png

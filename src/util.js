@@ -12,7 +12,15 @@ const Util = (() => {
     return output;
   };
   
+  let randomChoice = arr => {
+    if (arr.length) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+    return null;
+  };
+
   return Object.freeze({
     makeGrid,
+    randomChoice,
   });
 })();
