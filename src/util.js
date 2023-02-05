@@ -1,5 +1,5 @@
 const Util = (() => {
-  
+  const STORAGE_PREFIX = "GGJ_SCRAMBLE_BRAMBLE_";
   let makeGrid = (w, h) => {
     let output = [];
     let row = [];
@@ -21,7 +21,7 @@ const Util = (() => {
 
   let getData = (key) => {
     try {
-      let value = window.localStorage.getItem(key);
+      let value = window.localStorage.getItem(STORAGE_PREFIX + key);
       if (!value) return null;
       return JSON.parse(value);
     } catch (e) {
@@ -31,7 +31,7 @@ const Util = (() => {
 
   let setData = (key, value) => {
     try {
-      window.localStorage.setItem(key, JSON.stringify(value));
+      window.localStorage.setItem(STORAGE_PREFIX + key, JSON.stringify(value));
     } catch (ex) {
       // do nothing
     }
