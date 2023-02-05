@@ -1,18 +1,6 @@
 const IMAGES = `images/connected_tile.png
 images/green_tile.png
 images/infected_tile.png
-images/output/connected_tile.png
-images/output/green_tile.png
-images/output/infected_tile.png
-images/output/plant.png
-images/output/px_connected_tile.png
-images/output/px_green_tile.png
-images/output/px_infected_tile.png
-images/output/px_template.png
-images/output/raised_template.png
-images/output/seed.png
-images/output/sprout.png
-images/output/tile_template.png
 images/plant.png
 images/px_connected_tile.png
 images/px_green_tile.png
@@ -42,4 +30,11 @@ images/root_template.png
 images/root_test.png
 images/seed.png
 images/sprout.png
-images/tile_template.png`;
+images/tile_template.png
+images/ui/bu.png
+images/ui/ku.png
+images/ui/lose-kanji.png
+images/ui/n.png
+images/ui/ra.png
+images/ui/ru.png
+images/ui/su.png`;

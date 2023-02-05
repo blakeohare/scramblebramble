@@ -88,10 +88,14 @@ class PlayScene {
       }
     }
 
+    let lose = false;
     for (let ev of events) {
       if (ev.type === 'TAP') {
         let tile = this.hitTest(ev.x, ev.y);
         if (tile) tile.attackPlant(this);
+      }
+      if (ev.type === 'KEYDOWN' && ev.key === 'F') {
+        lose = true;
       }
     }
 
@@ -110,23 +114,33 @@ class PlayScene {
     
     // 2nd pass
     let notConnected = 0;
+    let notGreen = 0;
     for (let tile of this.allTiles) {
       tile.fixConnections();
       
       if (tile.state !== 'CONNECTED') {
         notConnected++;
       }
+      if (tile.state !== 'GREEN') {
+        notGreen++;
+      }
     }
     
     if (notConnected === 0) {
+      lose = true;
+    }
+
+    if (lose) {
       setNextScene(new ScoreScreen(this, this.score));
     }
 
     this.infectionCount = this.allTiles.length - notConnected;
-    this.isCascade = this.infectionCount / this.allTiles.length >= RATIO_FOR_CASCADE;
+    this.isCascade = notGreen / this.allTiles.length >= RATIO_FOR_CASCADE;
   }
 
   render(gfx, rc) {
+
+    gfx.fill(0, 50, 10);
 
     let left = Math.floor((WIDTH - (this.grid.length + 0.5) * TILE_WIDTH) / 2);
     let top = 40;

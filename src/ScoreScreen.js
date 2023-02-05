@@ -31,6 +31,14 @@ class ScoreScreen {
 
     this.bg.render(gfx, renderCounter);
     gfx.rectangle(0, 0, WIDTH, HEIGHT, 0, 0, 0, alpha);
+    {
+      let lose = gfx.getImage('images/ui/lose-kanji.png');
+      let x = (WIDTH - lose.width) / 1;
+      let y = (HEIGHT - lose.height) / 3;
+      x += Math.random() * 6 - 3;
+      y += Math.random() * 8 - 4;
+      gfx.drawImage(lose, Math.floor(x), Math.floor(y));
+    }
     gfx.drawText("THE WEEDS HAVE WON", "XL", x, y, 255, 255, 255);
     gfx.drawText("(press anywhere)", "M", 200, 400, 180, 180, 180);
   }

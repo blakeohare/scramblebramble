@@ -71,6 +71,24 @@ window.addEventListener('load', async () => {
   window.addEventListener('mouseup', ev => handleMouse(ev, false, false));
   window.addEventListener('mousemove', ev => handleMouse(ev, true, false));
 
+  window.addEventListener('keydown', ev => handleKey(ev, true));
+  window.addEventListener('keyup', ev => handleKey(ev, false));
+
+  let keyConversion = { 
+    ' ': 'SPACE', 
+    'ARROWLEFT': 'LEFT',
+    'ARROWRIGHT': 'RIGHT',
+    'ARROWUP': 'UP',
+    'ARROWDOWN': 'DOWN',
+  };
+  let handleKey = (ev, isDown) => {
+    let key = ev.key.toUpperCase();
+    gameContext.events.push({
+      type: isDown ? 'KEYDOWN' : 'KEYUP',
+      key: keyConversion[key] || key,
+    });
+  };
+
   let loadImage = async (path) => {
     return new Promise(res => {
       let imgElement = document.createElement('img');
