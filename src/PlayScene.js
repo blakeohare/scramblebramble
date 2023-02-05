@@ -1,3 +1,6 @@
+const SCORE_X = 10;
+const SCORE_Y = 150;
+
 class PlayScene {
   constructor() {
     this.grid = Util.makeGrid(8, 8);
@@ -71,6 +74,8 @@ class PlayScene {
 
   incrementScore() {
     this.score++;
+
+    Util.createDebrisBurst(this, SCORE_X + 29 * ((this.score + "").length / 2), SCORE_Y + 20, 200, false, 255, 255, 255, true);
   }
 
   update(events) {
@@ -92,7 +97,10 @@ class PlayScene {
     for (let ev of events) {
       if (ev.type === 'TAP') {
         let tile = this.hitTest(ev.x, ev.y);
-        if (tile) tile.attackPlant(this);
+        if (tile) {
+          tile.attackPlant(this);
+          Util.createDebrisBurst(this, tile.actualX, tile.actualY, 40, true, 80, 40, 20);
+        }
       }
       if (ev.type === 'KEYDOWN' && ev.key === 'F') {
         lose = true;
@@ -162,12 +170,12 @@ class PlayScene {
     {
       gfx.drawImage(gfx.getImage('images/ui/score.png'), 10, 100);
       let chars = ("" + this.score).split("");
-      let x = 10;
-      let y = 150; 
+      let x = SCORE_X;
+      let y = SCORE_Y; 
       for (let char of chars) {
         let img = gfx.getImage('images/ui/nums/' + char + '.png');
         gfx.drawImage(img, x, y);
-        x += img.width - 2;
+        x += img.width - 6;
       }
     }
   }

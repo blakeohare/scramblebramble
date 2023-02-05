@@ -19,8 +19,25 @@ const Util = (() => {
     return null;
   };
 
+  let createDebrisBurst = (scene, x, y, amount, useGravity, r, g, b, useFade) => {
+    for (let i = 0; i < amount; i++) {
+      let angle = Math.random() * 2 * Math.PI;
+      let radius = Math.random() * 10;
+      let vx = Math.cos(angle) * 3;
+      let vy = Math.sin(angle) * 3;
+      let ax = x + Math.cos(angle) * radius;
+      let ay = y + Math.sin(angle) * radius;
+      if (useGravity) {
+        vy -= 5;
+      }
+      scene.sprites.push(new Debris(ax, ay, vx, vy, FPS / 4, useGravity ? 'FALL' : 'FLY', !!useFade, r, g, b));
+    }
+  };
+
   return Object.freeze({
+    createDebrisBurst,
     makeGrid,
     randomChoice,
   });
 })();
+

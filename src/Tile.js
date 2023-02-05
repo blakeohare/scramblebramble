@@ -45,6 +45,7 @@ class Tile {
     this.images = null;
     this.stateCounter = 0;
     this.pulseCounter = Math.floor(Math.random() * 10000);
+    this.pulseCounterStep = 1.0;
   }
 
   setState(newState, scene) {
@@ -93,7 +94,8 @@ class Tile {
     this.offsetX = 0;
 
     this.offsetY += Math.floor(Math.cos(this.pulseCounter * Math.PI / FPS * 1.5) * 2 + 0.5);
-    this.pulseCounter++;
+    this.pulseCounter += Math.min(3, this.pulseCounterStep);
+    this.pulseCounterStep *= 1.0003851559; // double every 30 seconds @ 60 FPS 
 
     let doSpread = false;
     switch (this.state) {

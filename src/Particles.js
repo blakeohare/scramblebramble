@@ -28,7 +28,7 @@ class FallingSeed {
 }
 
 class Debris {
-  constructor(x, y, vx, vy, lifeSpan, behavior, enableFade) {
+  constructor(x, y, vx, vy, lifeSpan, behavior, enableFade, r, g, b) {
     this.x = x;
     this.y = y;
     this.vx = vx;
@@ -38,6 +38,9 @@ class Debris {
     this.dead = false;
     this.behavior = behavior;
     this.enableFade = !!enableFade;
+    this.r = r;
+    this.g = g;
+    this.b = b;
   }
 
   update(scene) {
@@ -47,7 +50,11 @@ class Debris {
 
     switch (this.behavior || '') {
 
-      
+      case 'FALL':
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vy += .7;
+        break;
 
       case 'FLY':
       default: 
@@ -60,7 +67,7 @@ class Debris {
   render(gfx, rc) {
     let a = 255;
     if (this.enableFade) {
-      a = Math.max(0, Math.min(255, Math.floor(this.lifeSpan / this.fullLifeSpan)));
+      a = Math.max(0, Math.min(255, Math.floor(255 * this.lifeSpan / this.fullLifeSpan)));
     }
     gfx.rectangle(Math.floor(this.x) - 1, Math.floor(this.y) - 1, 2, 2, this.r, this.g, this.b, a);
   }
