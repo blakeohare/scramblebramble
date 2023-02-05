@@ -34,7 +34,6 @@ class TitleScene {
     // Scramble Bramble in Katakana
     {
       let kana = 'su ku ra n bu ru bu ra n bu ru'.split(' ').map(t => this.images[t]);
-      let kanaWidth = kana.map(t => t.width).reduce((a, b) => a + b);
       let x = 15;
       let y = (HEIGHT - kana[0].height) / 3;
       for (let char of kana) {
@@ -45,8 +44,16 @@ class TitleScene {
       }
     }
     
-    gfx.drawText("Scramble Bramble", "M", x, y + 60, 0, 128, 0);
-    // gfx.rectangle(this.x, this.y, 30, 30, 0, 0, 255);
-    gfx.drawText("(press anywhere)", "M", 200, 200, 180, 180, 180);
+    {
+      let msg = gfx.getImage('images/ui/title.png');
+      gfx.drawImage(msg, 
+        Math.floor((WIDTH - msg.width) / 2), 
+        150 - Math.floor(12 * Math.abs(Math.cos(1.5 * renderCounter / FPS * Math.PI * 2))));
+    }
+
+    if ((renderCounter / FPS * 2) % 1 < 0.6) {
+      let msg = gfx.getImage('images/ui/press-anywhere.png');
+      gfx.drawImage(msg, Math.floor((WIDTH - msg.width) / 2), 200);
+    }
   }
 }

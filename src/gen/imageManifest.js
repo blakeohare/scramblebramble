@@ -35,6 +35,8 @@ images/ui/bu.png
 images/ui/ku.png
 images/ui/lose-kanji.png
 images/ui/n.png
+images/ui/press-anywhere.png
 images/ui/ra.png
 images/ui/ru.png
-images/ui/su.png`;
+images/ui/su.png
+images/ui/title.png`;

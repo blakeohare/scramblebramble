@@ -121,7 +121,7 @@ class PlayScene {
       if (tile.state !== 'CONNECTED') {
         notConnected++;
       }
-      if (tile.state !== 'GREEN') {
+      if (tile.state !== 'CLEAN') {
         notGreen++;
       }
     }
