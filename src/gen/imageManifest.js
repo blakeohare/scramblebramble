@@ -1,12 +1,27 @@
 const IMAGES = `images/connected_tile.png
 images/green_tile.png
 images/infected_tile.png
+images/output/connected_tile.png
+images/output/green_tile.png
+images/output/infected_tile.png
+images/output/plant.png
+images/output/px_connected_tile.png
+images/output/px_green_tile.png
+images/output/px_infected_tile.png
+images/output/px_template.png
+images/output/raised_template.png
+images/output/seed.png
+images/output/sprout.png
+images/output/tile_template.png
 images/plant.png
+images/px_connected_tile.png
+images/px_green_tile.png
+images/px_infected_tile.png
+images/px_template.png
 images/raised_template.png
 images/roots/root_e.png
 images/roots/root_e_incoming.png
 images/roots/root_e_sml.png
-images/roots/root_full.png
 images/roots/root_ne.png
 images/roots/root_ne_incoming.png
 images/roots/root_ne_sml.png
@@ -23,6 +38,8 @@ images/roots/root_template.png
 images/roots/root_w.png
 images/roots/root_w_incoming.png
 images/roots/root_w_sml.png
+images/root_template.png
+images/root_test.png
 images/seed.png
 images/sprout.png
 images/tile_template.png`;

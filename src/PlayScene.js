@@ -145,6 +145,6 @@ class PlayScene {
       sprite.render(gfx, rc);
     }
 
-    gfx.drawText("Score: " + this.score, 'XL', 10, 100, 255, 255, 255);
+    gfx.drawText("Score: " + this.score, 'M', 10, 100, 255, 255, 255);
   }
 }

@@ -1,6 +1,5 @@
-const TILE_WIDTH = 74;
-const TILE_HEIGHT = 79;
-
+const TILE_WIDTH = 32;
+const TILE_HEIGHT = 32;
 
 class Tile {
   constructor(col, row) {
@@ -33,7 +32,7 @@ class Tile {
       SE: null,
     };
 
-    this.px = col * TILE_WIDTH + (row % 2) * 37;
+    this.px = col * TILE_WIDTH + (row % 2) * Math.floor(TILE_WIDTH / 2);
     this.py = row * Math.floor(TILE_HEIGHT * 3 / 4);
 
     this.width = TILE_WIDTH;
@@ -195,13 +194,16 @@ class Tile {
   render(gfx, rc, x, y) {
     if (this.images === null) {
       let images = {
-        CLEAN: gfx.getImage('images/green_tile.png'),
-        INFECTED: gfx.getImage('images/infected_tile.png'),
-        CONNECTED: gfx.getImage('images/connected_tile.png'),
+        
+        CLEAN: gfx.getImage('images/px_green_tile.png'),
+        INFECTED: gfx.getImage('images/px_infected_tile.png'),
+        CONNECTED: gfx.getImage('images/px_connected_tile.png'),
+
         SEED: gfx.getImage('images/seed.png'),
-        ROOT_ALL: gfx.getImage('images/root_full.png'),
         SPROUT: gfx.getImage('images/sprout.png'),
         PLANT: gfx.getImage('images/plant.png'),
+
+        ROOT_TEST: gfx.getImage('images/root_test.png'),
         ROOT_BIG: {},
         ROOT_SMALL: {},
         ROOT_INCOMING: {},
@@ -214,7 +216,6 @@ class Tile {
       this.images = { ...images };
     }
     let bg = null;
-    let showRoots = false;
     let shadowSize = 0;
     let plant = null;
     switch (this.state) {
@@ -242,6 +243,7 @@ class Tile {
 
     gfx.drawImage(bg, x, y);
     for (let dir of this.dirs) {
+      
       if (this.fullRootStatus[dir]) {
         gfx.drawImage(this.images.ROOT_BIG[dir], x, y);
       } else {
@@ -252,6 +254,7 @@ class Tile {
           gfx.drawImage(this.images.ROOT_SMALL[dir], x, y);
         }
       }
+      
     }
 
     if (plant) {

@@ -1,7 +1,7 @@
 const DEV_MODE = false;
 
 const FPS = 60;
-const WIDTH = 1024;
+const WIDTH = 480;
 const HEIGHT = Math.floor(WIDTH * 9 / 16);
 
 const STARTING_SEED_DROP_DELAY = FPS * 0.8;

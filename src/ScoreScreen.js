@@ -22,8 +22,8 @@ class ScoreScreen {
   }
 
   render(gfx, renderCounter) {
-    let x = 200 + Math.floor(Math.random() * 5);
-    let y = 200 + Math.floor(Math.cos(renderCounter / 20 * Math.PI * 2 / 3) * 6 + Math.random() * 3)
+    let x = 8 + Math.floor(Math.random() * 5);
+    let y = 100 + Math.floor(Math.cos(renderCounter / 20 * Math.PI * 2 * 3) * 3 + Math.random() * 5)
 
     let fadeInDuration = FPS / 2;
     let alpha = Math.floor(160 * this.counter / fadeInDuration);
