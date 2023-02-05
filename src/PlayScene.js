@@ -44,6 +44,48 @@ class PlayScene {
       tile.neighbors.SW = allTilesLookup[westX + ',' + southY] || null;
       tile.neighbors.SE = allTilesLookup[eastX + ',' + southY] || null;
     });
+
+    let createLightning = (start) => {
+      return {
+        start,
+        duration: FPS * 0.4,
+        render: (gfx, progress) => {
+          let maxAlpha = 80;
+          let invProg = 1.0 - progress;
+          let intensity = Math.pow(invProg, 2);
+          let alpha = Math.max(0, Math.min(maxAlpha, Math.floor(intensity * maxAlpha)));
+          gfx.rectangle(0, 0, WIDTH, HEIGHT, 255, 255, 255, alpha);
+        },
+      };
+    };
+
+    let setRainIntensity = (start, amt) => {
+      return {
+        start,
+        duration: 2,
+        render: _ => {
+          this.rainIntensity = amt;
+        },
+      };
+    };
+
+    this.events = [
+      // setRainIntensity(FPS * 0, 0.1),
+      createLightning(FPS * 13),
+      createLightning(FPS * 13.2),
+      setRainIntensity(FPS * 13.5, 0.1),
+      createLightning(FPS * 15),
+      createLightning(FPS * 15.3),
+      setRainIntensity(FPS * 15, 0.3),
+      setRainIntensity(FPS * 20, 0.5),
+      createLightning(FPS * 25),
+      createLightning(FPS * 25.5),
+      setRainIntensity(FPS * 25, 1.0),
+      
+    ];
+    this.evCounter = 0;
+
+    this.rainIntensity = 0;
   }
 
   hitTest(x, y) {
@@ -144,6 +186,17 @@ class PlayScene {
 
     this.infectionCount = this.allTiles.length - notConnected;
     this.isCascade = notGreen / this.allTiles.length >= RATIO_FOR_CASCADE;
+
+    // update rain 
+
+    let newRainDrops = Math.floor(this.rainIntensity * 10);
+    for (let i = 0; i < newRainDrops; i++) {
+      let x = WIDTH * Math.random();
+      let y = 0;
+      let vx = 0.7 + Math.random() * 0.5;
+      let vy = 8;
+      this.sprites.push(new Debris(x, y, -vx, vy, Math.floor(HEIGHT / vy), 'FLY', false, 80, 120, 255));
+    }
   }
 
   render(gfx, rc) {
@@ -176,6 +229,16 @@ class PlayScene {
         let img = gfx.getImage('images/ui/nums/' + char + '.png');
         gfx.drawImage(img, x, y);
         x += img.width - 6;
+      }
+    }
+
+    this.evCounter++;
+    for (let ev of this.events) {
+      let { start, duration } = ev;
+      let end = start + duration;
+      if (this.evCounter >= start && this.evCounter <= end) {
+        let progress = Math.max(0, Math.min(1, (this.evCounter - start) / duration));
+        ev.render(gfx, progress);
       }
     }
   }
