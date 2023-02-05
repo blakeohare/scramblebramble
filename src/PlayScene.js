@@ -140,7 +140,7 @@ class PlayScene {
 
   render(gfx, rc) {
 
-    gfx.fill(0, 50, 10);
+    gfx.fill(0, 90, 20);
 
     let left = Math.floor((WIDTH - (this.grid.length + 0.5) * TILE_WIDTH) / 2);
     let top = 40;
@@ -159,6 +159,16 @@ class PlayScene {
       sprite.render(gfx, rc);
     }
 
-    gfx.drawText("Score: " + this.score, 'M', 10, 100, 255, 255, 255);
+    {
+      gfx.drawImage(gfx.getImage('images/ui/score.png'), 10, 100);
+      let chars = ("" + this.score).split("");
+      let x = 10;
+      let y = 150; 
+      for (let char of chars) {
+        let img = gfx.getImage('images/ui/nums/' + char + '.png');
+        gfx.drawImage(img, x, y);
+        x += img.width - 2;
+      }
+    }
   }
 }
