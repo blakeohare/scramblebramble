@@ -9,6 +9,7 @@ class PlayScene {
     this.tileLocCache = {};
 
     this.score = 0;
+    this.showScore = true;
 
     this.seedDropCountdown = 1;
     this.seedDropDelay = STARTING_SEED_DROP_DELAY;
@@ -86,6 +87,10 @@ class PlayScene {
     this.evCounter = 0;
 
     this.rainIntensity = 0;
+  }
+
+  disableScore() {
+    this.showScore = false;
   }
 
   hitTest(x, y) {
@@ -220,7 +225,7 @@ class PlayScene {
       sprite.render(gfx, rc);
     }
 
-    {
+    if (this.showScore) {
       gfx.drawImage(gfx.getImage('images/ui/score.png'), 10, 100);
       let chars = ("" + this.score).split("");
       let x = SCORE_X;

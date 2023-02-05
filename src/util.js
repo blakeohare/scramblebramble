@@ -19,6 +19,24 @@ const Util = (() => {
     return null;
   };
 
+  let getData = (key) => {
+    try {
+      let value = window.localStorage.getItem(key);
+      if (!value) return null;
+      return JSON.parse(value);
+    } catch (e) {
+      return null;
+    }
+  };
+
+  let setData = (key, value) => {
+    try {
+      window.localStorage.setItem(key, JSON.stringify(value));
+    } catch (ex) {
+      // do nothing
+    }
+  };
+
   let createDebrisBurst = (scene, x, y, amount, useGravity, r, g, b, useFade) => {
     for (let i = 0; i < amount; i++) {
       let angle = Math.random() * 2 * Math.PI;
@@ -36,8 +54,10 @@ const Util = (() => {
 
   return Object.freeze({
     createDebrisBurst,
+    getData,
     makeGrid,
     randomChoice,
+    setData,
   });
 })();
 

@@ -34,6 +34,7 @@ images/tile_template.png
 images/ui/bu.png
 images/ui/dakuten.png
 images/ui/fu.png
+images/ui/high-score.png
 images/ui/ku.png
 images/ui/lose-kanji.png
 images/ui/n.png

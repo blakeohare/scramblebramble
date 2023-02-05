@@ -1,7 +1,14 @@
 class ScoreScreen {
 
-  constructor(bg) {
+  constructor(bg, score) {
     this.bg = bg;
+    this.score = score;
+    this.highScore = parseInt(Util.getData('highscore'));
+    if (isNaN(this.highScore) || this.highScore < this.score) {
+      this.highScore = this.score;
+      Util.setData('highscore', this.score);
+    }
+    this.bg.disableScore();
     this.counter = 0;
   }
 
@@ -44,6 +51,22 @@ class ScoreScreen {
     if ((renderCounter / FPS * 2) % 1 < 0.6) {
       let msg = gfx.getImage('images/ui/press-anywhere.png');
       gfx.drawImage(msg, Math.floor((WIDTH - msg.width) / 2), 200);
+    }
+
+    {
+      gfx.drawImage(gfx.getImage('images/ui/score.png'), 10, 50);
+      this.drawScore(gfx, this.score, SCORE_X, 80);
+      gfx.drawImage(gfx.getImage('images/ui/high-score.png'), 10, 160);
+      this.drawScore(gfx, this.highScore, SCORE_X, 190);
+    }
+  }
+
+  drawScore(gfx, score, x, y) {
+    let chars = ("" + score).split("");
+    for (let char of chars) {
+      let img = gfx.getImage('images/ui/nums/' + char + '.png');
+      gfx.drawImage(img, x, y);
+      x += img.width - 6;
     }
   }
 }
