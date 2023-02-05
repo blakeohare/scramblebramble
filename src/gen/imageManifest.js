@@ -39,4 +39,6 @@ images/ui/press-anywhere.png
 images/ui/ra.png
 images/ui/ru.png
 images/ui/su.png
-images/ui/title.png`;
+images/ui/title.png
+images/ui/weeds-won.png
+images/ui/weeds-won2.png`;
