@@ -61,6 +61,8 @@ class Tile {
       this.seed = null;
       this.rootSproutStatus = {};
       this.fullRootStatus = {};
+    } else if (this.state === 'DROPPED') {
+      Util.createDebrisBurst(scene, this.actualX, this.actualY, 12, true, 40, 80, 0, false);
     }
   }
 
@@ -227,6 +229,12 @@ class Tile {
       case 'FALLING':
         bg = this.images.CLEAN;
         shadowSize = 4;
+        if (this.stateCounter > FPS / 3) {
+          shadowSize = 6;
+          if (this.stateCounter > 2 * FPS / 3) {
+            shadowSize = 8;
+          }
+        }
         break;
       case 'DROPPED':
         bg = this.images.INFECTED;
@@ -244,6 +252,14 @@ class Tile {
     }
 
     gfx.drawImage(bg, x, y);
+
+    if (shadowSize > 0) {
+      let vSize = Math.floor(shadowSize / 2);
+      let sx = x + bg.width / 2;
+      let sy = y + bg.height / 3;
+      gfx.rectangle(sx - Math.floor(shadowSize / 2), sy - Math.floor(vSize / 2), shadowSize, vSize, 0, 0, 0, 140);
+    }
+
     for (let dir of this.dirs) {
       
       if (this.fullRootStatus[dir]) {
